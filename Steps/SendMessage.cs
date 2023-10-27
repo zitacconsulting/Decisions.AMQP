@@ -8,6 +8,7 @@ using DecisionsFramework.ServiceLayer.Services.ContextData;
 using Amqp;
 using Amqp.Framing;
 using Amqp.Types;
+using DecisionsFramework.Data.DataTypes;
 
 
 namespace Zitac.AMQP.Steps;
@@ -52,6 +53,7 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
         {
 
             List<DataDescription> dataDescriptionList = new List<DataDescription>();
+
             // Connection Settings
             dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(String)), "Server") { Categories = new string[] { "Connection Settings" } });
             dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(Int32)), "Port") { Categories = new string[] { "Connection Settings" } });
@@ -61,7 +63,7 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
             // Outgoing Message
             dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(String)), "Outgoing Queue Name") { Categories = new string[] { "Outgoing Message" } });
             dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(String)), "Payload") { Categories = new string[] { "Outgoing Message" } });
-            dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(DataPair)), "Application Properties", true, true, false) { Categories = new string[] { "Outgoing Message" } });
+            dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(SimpleKeyValuePair)), "Application Properties", true, true, false) { Categories = new string[] { "Outgoing Message" } });
             dataDescriptionList.Add(new DataDescription((DecisionsType)new DecisionsNativeType(typeof(String)), "Content Type") { Categories = new string[] { "Outgoing Message" } });
 
             // Response
@@ -96,24 +98,26 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
     }
     public ResultData Run(StepStartData data)
     {
+
         // Connection Settings
         string Server = (string)data.Data["Server"];
+
         Int32 Port = (Int32)data.Data["Port"];
         Credentials Credentials = (Credentials)data.Data["Credentials"];
         bool UseSSL = (bool)data.Data["Use SSL"];
 
         // Outgoing Message
         string QueueName = (string)data.Data["Outgoing Queue Name"];
-        string Payload = (string)data.Data["Outgoing Payload"];
-        DataPair[] ApplicationProperties = (DataPair[])data.Data["Application Properties"];
+        string Payload = (string)data.Data["Payload"];
+        SimpleKeyValuePair[] ApplicationProperties = (SimpleKeyValuePair[])data.Data["Application Properties"];
         string ContentType = (string)data.Data["Content Type"];
+
 
         // Response
         string CorrelationID = (string)data.Data["Correlation ID"];
         string ResponseQueueName = (string)data.Data["Response Queue Name"];
-        Int32 TimeOutInSec = (Int32)data.Data["Timeout in Sec"];
+        Int32? TimeOutInSec = (Int32?)data.Data["Timeout in Sec"];
 
-        TimeSpan TimeoutSpan = TimeSpan.FromSeconds(TimeOutInSec);
 
 
         string Protocol = "amqp";
@@ -130,26 +134,40 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
             Session session = new Session(connection);
             SenderLink sender = new SenderLink(session, "sender-link", QueueName);
 
+
+            var props = new ApplicationProperties();
+            if (ApplicationProperties != null)
+            {
+
+                foreach (var keyValuePair in ApplicationProperties)
+                {
+                    props[keyValuePair.Key] = keyValuePair.Value;
+                }
+            }
+            
+            if (expectResponse)
+            {
+                props["correlationId"] = CorrelationID;
+            }
+            
             Message message = new Message(Payload)
             {
+                ApplicationProperties = props,
                 Properties = new Properties() { ContentType = ContentType },
             };
-
-            foreach (var dataPair in ApplicationProperties)
-            {
-                message.ApplicationProperties[dataPair.Name] = dataPair.OutputValue;
-            }
-
-            if (expectResponse)
-            {
-                message.ApplicationProperties["correlationId"] = CorrelationID;
-            }
-
+            
             sender.Send(message);
             sender.Close();
-
+            
             if (expectResponse)
             {
+
+                TimeSpan TimeoutSpan = TimeSpan.FromSeconds(10);
+
+                if (TimeOutInSec == null)
+                {
+                    TimeoutSpan = TimeSpan.FromSeconds((Int32)TimeOutInSec);
+                }
 
                 Map filters = new Map();
                 filters.Add(new Symbol("f1"), new DescribedValue(new Symbol("apache.org:selector-filter:string"), "correlationId = '" + CorrelationID + "'"));
@@ -160,7 +178,6 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
                 Message responseMessage = receiver.Receive(TimeoutSpan);
                 if (responseMessage != null)
                 {
-                    Console.WriteLine($"Received response: {responseMessage.Body} for request ID: {responseMessage.Properties.CorrelationId}");
                     receiver.Accept(responseMessage);
                     receiver.Close();
                     session.Close();

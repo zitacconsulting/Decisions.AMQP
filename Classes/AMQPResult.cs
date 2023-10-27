@@ -21,7 +21,7 @@ public class AMQPResult
     public AMQPResult(){}
     public AMQPResult(Message message)
     {
-        this.Body = message.Body.ToString();
+        if(message.Body != null) { this.Body = message.Body.ToString();}
         this.ContentType = message.Properties.ContentType;
 
         var dataPairs = new List<DataPair>();
