@@ -40,7 +40,7 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
         {
             IInputMapping[] inputMappingArray = new IInputMapping[4];
             inputMappingArray[0] = (IInputMapping)new ConstantInputMapping() { InputDataName = "Port", Value = "5672" };
-            inputMappingArray[1] = (IInputMapping)new ConstantInputMapping() { InputDataName = "Content Type", Value = "text/plain" };
+            inputMappingArray[1] = (IInputMapping)new ConstantInputMapping() { InputDataName = "Content Type", Value = "application/json" };
             inputMappingArray[2] = (IInputMapping)new ConstantInputMapping() { InputDataName = "Use SSL", Value = true };
             inputMappingArray[3] = (IInputMapping)new ConstantInputMapping() { InputDataName = "Timeout in Sec", Value = 10 };
             return inputMappingArray;
@@ -149,7 +149,7 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
             {
                 props["correlationId"] = CorrelationID;
             }
-            
+            props["contentType"] = ContentType;
             Message message = new Message(Payload)
             {
                 ApplicationProperties = props,
