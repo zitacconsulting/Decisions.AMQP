@@ -149,7 +149,7 @@ public class SendMessage : BaseFlowAwareStep, ISyncStep, IDataConsumer, IDataPro
             {
                 props["correlationId"] = CorrelationID;
             }
-            props["contentType"] = ContentType;
+            
             Message message = new Message(Payload)
             {
                 ApplicationProperties = props,
