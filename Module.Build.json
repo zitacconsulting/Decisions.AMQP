@@ -1,0 +1,26 @@
+{
+    "Resources": {
+        "NoComponents": true,
+        "CoreServicesDlls": [
+            "./bin/Zitac.AMQP.Steps.dll"
+        ],
+        "CustomImages": [
+            "amqp.png"
+        ],
+        "CliDlls": null,
+        "WebPages": null,
+        "SilverlightDlls": null,
+        "AgentDlls": null,
+        "InstallScript": null,
+        "SqlScripts": null,
+        "ObjectsToImport": null,
+        "MsSqlScript": null
+    },
+    "Version": "9.19.0",
+    "ImagePath": "amqp.png",
+    "Dependencies": [{
+        "ModuleName": "Decisions.ActiveMQ.zip",
+        "AutoInstall": true
+    }],
+    "Description": "The AMQP module provides steps for sending and receiving messages using the AMQP protocol. It includes support for connecting to AMQP brokers, sending messages to queues or topics, and receiving messages from queues or topics. The module is designed to work with any AMQP-compliant broker, such as ActibeMQ, RabbitMQ or Apache Qpid."
+} 

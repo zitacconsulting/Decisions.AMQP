@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Zitac.AMQP.Steps/1.0.0": {
+        "dependencies": {
+          "AMQPNetLite": "2.4.3",
+          "DecisionsSDK": "9.19.0"
+        },
+        "runtime": {
+          "Zitac.AMQP.Steps.dll": {}
+        }
+      },
+      "AMQPNetLite/2.4.3": {
+        "dependencies": {
+          "AMQPNetLite.Core": "2.4.3"
+        }
+      },
+      "AMQPNetLite.Core/2.4.3": {
+        "runtime": {
+          "lib/netstandard2.0/Amqp.Net.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.4.3.0"
+          }
+        }
+      },
+      "DecisionsSDK/9.19.0": {
+        "runtime": {
+          "lib/net9.0/Decisions.Web.Core.dll": {
+            "assemblyVersion": "9.19.0.0",
+            "fileVersion": "9.19.0.10116"
+          },
+          "lib/net9.0/DecisionsFramework.dll": {
+            "assemblyVersion": "9.19.0.0",
+            "fileVersion": "9.19.0.10116"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Zitac.AMQP.Steps/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AMQPNetLite/2.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6E5V+6qQaFnKpqr/a4ipZV1eXw1g3BLu7GpOFw5cre6TZLwJyKWo44TrWcuLve6zrXD8B7da1Og27iYqEdG5mQ==",
+      "path": "amqpnetlite/2.4.3",
+      "hashPath": "amqpnetlite.2.4.3.nupkg.sha512"
+    },
+    "AMQPNetLite.Core/2.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ScD4522aae8u9pWaREuc0/EmbeYyI52YBoN0/HFfjkiPKH7GhSnUMEKidTCVYsPg+C1wcmLSJWa335OOqEptlw==",
+      "path": "amqpnetlite.core/2.4.3",
+      "hashPath": "amqpnetlite.core.2.4.3.nupkg.sha512"
+    },
+    "DecisionsSDK/9.19.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wneSyq1+RzpPaGAqLstV8ueqbraQtUap6K+KhcHUy/cMgA1Ic+UzWEWNEJway9Clq9tL/jxjHT4YDQxCSOhdFw==",
+      "path": "decisionssdk/9.19.0",
+      "hashPath": "decisionssdk.9.19.0.nupkg.sha512"
+    }
+  }
+}
