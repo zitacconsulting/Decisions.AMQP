@@ -2,7 +2,10 @@
     "Resources": {
         "NoComponents": true,
         "CoreServicesDlls": [
-            "./bin/Zitac.AMQP.Steps.dll"
+            "./Decisions.AMQP/bin/Decisions.AMQP.dll"
+        ],
+        "ReferenceDlls": [
+            "./Decisions.AMQP/bin/Amqp.Net.dll"
         ],
         "CustomImages": [
             "amqp.png"
@@ -16,11 +19,11 @@
         "ObjectsToImport": null,
         "MsSqlScript": null
     },
-    "Version": "9.19.0",
+    "Version": "2.0.0",
     "ImagePath": "amqp.png",
     "Dependencies": [{
-        "ModuleName": "Decisions.ActiveMQ.zip",
+        "ModuleName": "Decisions.MessageQueues.zip",
         "AutoInstall": true
     }],
-    "Description": "The AMQP module provides steps for sending and receiving messages using the AMQP protocol. It includes support for connecting to AMQP brokers, sending messages to queues or topics, and receiving messages from queues or topics. The module is designed to work with any AMQP-compliant broker, such as ActibeMQ, RabbitMQ or Apache Qpid."
-} 
+    "Description": "The AMQP module connects Decisions to any AMQP 1.0 broker (ActiveMQ Artemis, ActiveMQ Classic, RabbitMQ 4.x, Azure Service Bus, Apache Qpid, Solace). It listens to queues and topics through Decisions message queue handlers, with broker-side message filters (simple filter rules, JMS selectors, RabbitMQ SQL and stream filters, or custom AMQP filters), and provides steps to send, receive, and request/reply. Queue credentials can be updated from a flow, for example a scheduled flow that fetches rotating credentials from an identity provider; the queue then restarts on every server with the new credentials."
+}

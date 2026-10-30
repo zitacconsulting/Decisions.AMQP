@@ -1,1 +1,5 @@
-obj/*
+obj/
+bin/
+*.zip
+# Decisions platform DLL, copied from a Decisions installation (see README > Building from Source)
+lib/*.dll

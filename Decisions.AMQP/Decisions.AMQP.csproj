@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- Every Decisions version from 9.26 onward runs on .NET 10. -->
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<NoWarn>$(NoWarn);SYSLIB0057</NoWarn>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Compiled against the oldest supported platform (9.31 SDK, runs on 9.32+). -->
+		<PackageReference Include="DecisionsSDK" Version="9.31.0">
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</PackageReference>
+		<!-- Pinned to 2.4.3: the built-in Decisions.ActiveMQ module ships a byte-identical
+		     Amqp.Net.dll (9.32 through 10.3), so both modules can be installed side by side. -->
+		<PackageReference Include="AMQPNetLite.Core" Version="2.4.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Ships with the Decisions.MessageQueues module (declared as a dependency in Module.Build.json).
+		     The copy in lib/ is taken from 9.32.0.75864. -->
+		<Reference Include="Decisions.MessageQueues">
+			<HintPath>..\lib\Decisions.MessageQueues.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+</Project>
